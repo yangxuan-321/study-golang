@@ -11,7 +11,7 @@ type treeNode struct {
 
 //为结构体定义方法
 //其实也相当于参数传递  只不过是 参数 写在 方法 之前
-//也可以 理解成  一个 值传递  举例：可以理解成 有一个 对象是 node_  ->  (node_)print  ->  node_.print()
+//也可以 理解成  一个 值传递  举例：可以理解成 有一个 对象是 node_  =>  (node_)print  =>  node_.print()
 func (node_ treeNode) print() {
 	fmt.Println(node_.value)
 }
