@@ -23,7 +23,7 @@ func (node_ treeNode) setValue_(value int) {
 
 //使用 地址传递 传递指针 方法 可以实现 set 方法
 func (node_ *treeNode) setValue(value int) {
-	//如果在C语言 里面 也可以写成 (*node_)->value = value
+	//如果在C语言 里面 就需要写成 node_->value = value  或者 (*node_).value = value
 	node_.value = value
 }
 
