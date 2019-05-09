@@ -25,10 +25,10 @@ func my(str string) int {
 
 //别人解法
 func other(str string) int {
-	lastSameValueIndex := make(map[byte]int)
+	lastSameValueIndex := make(map[rune]int)
 	start := 0
 	maxLength := 0
-	for i, v := range []byte(str) {
+	for i, v := range []rune(str) {
 		index, ok := lastSameValueIndex[v]
 		if ok && index >= start {
 			//遇到 被相似的了
@@ -52,4 +52,5 @@ func main() {
 	fmt.Println(other("abcabcbb"))
 	fmt.Println(other("bbbbb"))
 	fmt.Println(other("pwwkew"))
+	fmt.Println(other("一二三二一"))
 }
