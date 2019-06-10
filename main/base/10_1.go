@@ -19,13 +19,45 @@ func receiver(workId int, c chan int) {
 	}
 }
 
-//规定类型 -- 返回的channel只能 存数据
+//上面的receiver方法不知道 什么时候 channel发完， 因此 一直使用死循环 进行接收。其实实际中 是有 办法知道 发送者是否发完的
+//发送方做个 close
+func receiver1(c chan int) {
+	for {
+		ch, ok := <-c
+		if !ok {
+			break
+		}
+		fmt.Println(ch)
+	}
+
+	// 或者可以写成 range
+	// 发完退出 就 跳出循环了
+	//for ch := range c {
+	//	fmt.Println(ch)
+	//}
+}
+
+// channel 的理论基础 是基于 CSP (Communication Sequential Process)
+// 不要通过共享内存来通信，而要通过通信来共享内存 (GO语言创始人)
+
+func channelClose() {
+	c := make(chan int, 3)
+	go receiver1(c)
+	c <- '1'
+	c <- '2'
+	close(c)
+	time.Sleep(time.Second)
+}
+
+//规定类型 -- 返回的channel只能 存数据 指定方向
+// chan<- 存数据
+// <-chan 取数据
 func createWorker(workId int) chan<- int {
-	c := make(chan<- int)
+	c := make(chan int)
 	go func() {
 		for {
 			//有时候会出现 换行来不及打印出来 就 打印了 另一条 。  连在一起了 这是 典型的线程安全问题
-			fmt.Printf("workid = %d, receive=%c", workId, c)
+			fmt.Printf("workid = %d, receive=%c", workId, <-c)
 			fmt.Printf("\n")
 		}
 	}()
@@ -81,6 +113,21 @@ func chanDemo() {
 	time.Sleep(time.Second * 5)
 }
 
+func bufferedChannel() {
+	// 带缓冲的Channel
+	// 如果不带缓冲必须要 指定 接口这者。
+	// 缓冲区大小是3， 如果没有人接受的话， 只能放三个 放第四个就会deadline掉
+	// 使用缓冲区在性能上是有一定 优势的。 不会造成快速的 协程切换
+	c := make(chan int, 3)
+	go receiver(7, c)
+	c <- '1'
+	c <- '2'
+	//延时一段时间 可以 使协程 进行切换
+	time.Sleep(time.Second)
+}
+
 func main() {
-	chanDemo()
+	//chanDemo()
+	//bufferedChannel()
+	channelClose()
 }
