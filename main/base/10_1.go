@@ -19,23 +19,24 @@ func receiver(workId int, c chan int) {
 	}
 }
 
-func createWorker(workId int) chan int {
-	c := make(chan int)
+//规定类型 -- 返回的channel只能 存数据
+func createWorker(workId int) chan<- int {
+	c := make(chan<- int)
 	go func() {
 		for {
 			//有时候会出现 换行来不及打印出来 就 打印了 另一条 。  连在一起了 这是 典型的线程安全问题
-			fmt.Printf("workid = %d, receive=%c", workId, <-c)
+			fmt.Printf("workid = %d, receive=%c", workId, c)
 			fmt.Printf("\n")
 		}
 	}()
 	return c
 }
 
-const channel_size = 10
+const channelSize = 10
 
 //函数式一等公民 channel也是一等公民
 func chanDemo() {
-	var channels [10]chan int // c == nil
+	var channels [10]chan<- int // c == nil
 	//c := make(chan int)
 	//专门开一个Goroutine来接受数据
 	//go func() {
@@ -55,7 +56,7 @@ func chanDemo() {
 	//}
 
 	//写法二
-	for i := 0; i < channel_size; i++ {
+	for i := 0; i < channelSize; i++ {
 		channels[i] = createWorker(i)
 	}
 
@@ -65,12 +66,15 @@ func chanDemo() {
 	//	c <- 2	//发数据
 	//}
 
-	for i := 0; i < channel_size; i++ {
+	for i := 0; i < channelSize; i++ {
 		channels[i] <- '0' + i //发数据
 	}
 
-	for i := 0; i < channel_size; i++ {
+	for i := 0; i < channelSize; i++ {
 		channels[i] <- 'A' + i //发数据
+		//以下两句会报错，因为 我们 创造的channel只能用于 存数据， 不能取数据
+		// r := <- channels[i]
+		// fmt.Println(r)
 	}
 
 	// 延时 5s 防止 主线程过快结束
