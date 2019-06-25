@@ -68,6 +68,7 @@ func main() {
 			values = values[1:]
 		// 超时（两次数据获取的时间 大与 800ms 就会超时）
 		// 因为 select 中 新来的 case 会打断 ??? 不确定
+		// 因为 走到 这个 case 的时候，会被阻塞 直到 新来的 select来打断他。或者 到了 0.5秒 就会自动 接收到 chan 的 一个值。 就完成了所谓的 超时判断问题
 		case <-time.After(500 * time.Millisecond):
 			fmt.Println("time out...")
 		// 定时 打印 切片长度， 防止数据 积压 过多
