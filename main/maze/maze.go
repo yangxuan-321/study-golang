@@ -75,7 +75,6 @@ func walkMaze(maze [][]int, start point, end point) {
 		if cur == end {
 			break
 		}
-
 		for _, dir := range rundirs {
 			next := cur.step(dir)
 
@@ -95,7 +94,7 @@ func walkMaze(maze [][]int, start point, end point) {
 			}
 
 			// 不能是 起始点
-			if next.i == start.i || next.j == start.j {
+			if next.i == start.i && next.j == start.j {
 				continue
 			}
 
@@ -106,7 +105,14 @@ func walkMaze(maze [][]int, start point, end point) {
 			}
 
 			q.push(next)
+
+			// 打标记
+			steps[next.i][next.j] = steps[cur.i][cur.j] + 1
 		}
+	}
+
+	for _, val := range steps {
+		fmt.Println(val)
 	}
 }
 
@@ -132,8 +138,7 @@ func (q *queue) pop() point {
 
 func main() {
 	maze := readMaze("./main/maze/maze.in")
-	fmt.Println(maze)
+	//fmt.Println(maze)
 	walkMaze(maze, point{0, 0}, point{len(maze), len(maze[0])})
-	fmt.Println(rundirs)
-	fmt.Println(left, down, right, up)
+	//fmt.Println(rundirs)
 }
