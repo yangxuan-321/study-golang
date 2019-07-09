@@ -62,12 +62,15 @@ type Copy interface {
 	Write
 }
 
-func CopyFile(c Copy) {
+type CopyFile struct {
+}
+
+func ccc(c Copy) {
 	contents := c.ReadFile()
 	c.WriteFile(contents)
 }
 
 func main() {
 	copy := Copy(ReadImpl{"123.txt"}, WriteImpl{"123.txt"})
-	CopyFile(copy)
+	ccc(copy)
 }
