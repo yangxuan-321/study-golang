@@ -38,28 +38,39 @@ const peopleBaseInfoRegex = `<div class="m-title" data-v-bff6f798>个人资料</
 	`</div>` +
 	`</div>`
 
+var peopleBaseInfoRe = regexp.MustCompile(peopleBaseInfoRegex)
+
+const genderStringRegex = `"genderString":"([男女]士)"`
+
+var genderRe = regexp.MustCompile(genderStringRegex)
+
+const nickNameRegex = `<h1 class="nickName" data-v-5b109fc3="">([^<].*)</h1>`
+
+var nickNameRe = regexp.MustCompile(nickNameRegex)
+
 func ParseProfile(contents []byte) engine.ParseResult {
 
 	profile := model.Profile{}
 
 	// 解析独白
-	re := regexp.MustCompile(peopleOSRegex)
-	peopleOSInfo := re.FindSubmatch(contents)
+	peopleOSRe := regexp.MustCompile(peopleOSRegex)
+	peopleOSInfo := peopleOSRe.FindSubmatch(contents)
 
 	if len(peopleOSInfo) == 2 {
 		profile.PeopleOS = string(peopleOSInfo[1])
 	}
 
 	// 解析其他个人信息
-	parsePeopleBaseInfo()
+	err := parsePeopleBaseInfo(contents, &profile)
+	if nil != err {
+		// TODO 错误处理
+	}
 
 	return engine.ParseResult{}
 }
 
 func parsePeopleBaseInfo(contents []byte, profile *model.Profile) error {
-	// 解析独白
-	re := regexp.MustCompile(peopleBaseInfoRegex)
-	peopleBaseInfo := re.FindAllSubmatch(contents, -1)
+	peopleBaseInfo := peopleBaseInfoRe.FindAllSubmatch(contents, -1)
 	if len(peopleBaseInfo) != 1 {
 		return fmt.Errorf("parse error, len(peopleBaseInfo) must 1, len(peopleBaseInfo):%d", len(peopleBaseInfo))
 	}
@@ -104,4 +115,23 @@ func parsePeopleBaseInfo(contents []byte, profile *model.Profile) error {
 	profile.Hourse = string(peopleBaseInfo0[14])
 
 	profile.Car = string(peopleBaseInfo0[15])
+
+	genders_ := genderRe.FindSubmatch(contents)
+	if len(genders_) != 1 || len(genders_[0]) != 2 {
+
+	}
+
+	genders_ := genderRe.FindSubmatch(contents)
+	if len(genders_) != 2 {
+		return fmt.Errorf("genders_ not matched")
+	}
+	profile.Gender = string(genders_[1])
+
+	nickName_ := nickNameRe.FindSubmatch(contents)
+	if len(nickName_) != 2 {
+		return fmt.Errorf("nickName_ not matched")
+	}
+	profile.Name = string(nickName_[1])
+
+	return nil
 }

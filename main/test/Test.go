@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	aarseProfile1()
+	aarseProfile2()
 }
 
 // 人物 内心独白 -- 简称OS
@@ -81,4 +81,13 @@ func aarseProfile1() {
 	compile := regexp.MustCompile(regex1)
 	submatch := compile.FindStringSubmatch(test)[1:]
 	fmt.Println(len(submatch))
+}
+
+const genderStringRegex = `"genderString":"([男女]士)"`
+const ttt = `["汉族","籍贯:河南周口","体型:保密","不吸烟","社交场合会喝酒","和家人同住","未买车","没有小孩","是否想要孩子:视情况而定","何时结婚:时机成熟就结婚"],"educationString":"大专","emotionStatus":0,"gender":1,"genderString":"女士","hasIntroduce":false,"heightString":"160cm","hideVerifyModule":false,"introduceContent":"她还没有填写内心独白","introducePraiseCount":0,"isActive":true,"isFollowing":false,"`
+
+func aarseProfile2() {
+	compile := regexp.MustCompile(genderStringRegex)
+	submatch := compile.FindStringSubmatch(ttt)
+	fmt.Println(submatch[1])
 }
