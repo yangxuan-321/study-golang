@@ -19,8 +19,8 @@ func ParseCityList(contents []byte) engine.ParseResult {
 	result := engine.ParseResult{}
 	for _, a := range all {
 		// 放入 城市的名字
-		result.Items = append(result.Items, string(a[2]))
-		result.Requests = append(result.Requests, engine.Request{Url: string(a[1]), ParserFunc: engine.NilParser})
+		result.Items = append(result.Items, "City: "+string(a[2]))
+		result.Requests = append(result.Requests, engine.Request{Url: string(a[1]), ParserFunc: ParseCity})
 	}
 
 	// 找到 470 个

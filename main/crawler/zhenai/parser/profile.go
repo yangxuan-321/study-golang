@@ -8,33 +8,35 @@ import (
 	"study-golang/main/crawler/model"
 )
 
+// 用户解析器
+
 // 人物 内心独白 -- 简称OS
-const peopleOSRegex = `<div class="m-title" data-v-bff6f798>内心独白</div> <div class="m-content-box m-des" data-v-bff6f798><span data-v-bff6f798>([^<].*[^>])</span><!----></div>`
+const peopleOSRegex = `<div class="m-title" data-v-bff6f798>内心独白</div> <div class="m-content-box m-des" data-v-bff6f798><span data-v-bff6f798>([^<]*)</span><!----></div>`
 
 const peopleBaseInfoRegex = `<div class="m-title" data-v-bff6f798>个人资料</div> ` +
 	`<div class="m-content-box" data-v-bff6f798>` +
 	`<div class="purple-btns" data-v-bff6f798>` +
-	`<div class="m-btn purple" data-v-bff6f798>([^<].*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>([^<]*)</div>` +
 	`<div class="m-btn purple" data-v-bff6f798>([^<]\d+)岁</div>` +
-	`<div class="m-btn purple" data-v-bff6f798>([^<].*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>([^<]*)</div>` +
 	`<div class="m-btn purple" data-v-bff6f798>([^<]\d+)cm</div>` +
 	`<div class="m-btn purple" data-v-bff6f798>([^<]\d+)kg</div>` +
-	`<div class="m-btn purple" data-v-bff6f798>工作地\:([^<].*)</div>` +
-	`<div class="m-btn purple" data-v-bff6f798>月收入\:([^<].*)</div>` +
-	`<div class="m-btn purple" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn purple" data-v-bff6f798>([^<].*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>工作地\:([^<]*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>月收入\:([^<]*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn purple" data-v-bff6f798>([^<]*)</div>` +
 	`</div> ` +
 	`<div class="pink-btns" data-v-bff6f798>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>籍贯\:([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>体型\:([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>是否想要孩子\:([^<].*)</div>` +
-	`<div class="m-btn pink" data-v-bff6f798>何时结婚\:([^<].*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>籍贯\:([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>体型\:([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>是否想要孩子\:([^<]*)</div>` +
+	`<div class="m-btn pink" data-v-bff6f798>何时结婚\:([^<]*)</div>` +
 	`</div>` +
 	`</div>`
 
@@ -44,7 +46,7 @@ const genderStringRegex = `"genderString":"([男女]士)"`
 
 var genderRe = regexp.MustCompile(genderStringRegex)
 
-const nickNameRegex = `<h1 class="nickName" data-v-5b109fc3="">([^<].*)</h1>`
+const nickNameRegex = `<h1 class="nickName" data-v-5b109fc3="">([^<]*)</h1>`
 
 var nickNameRe = regexp.MustCompile(nickNameRegex)
 
@@ -115,11 +117,6 @@ func parsePeopleBaseInfo(contents []byte, profile *model.Profile) error {
 	profile.Hourse = string(peopleBaseInfo0[14])
 
 	profile.Car = string(peopleBaseInfo0[15])
-
-	genders_ := genderRe.FindSubmatch(contents)
-	if len(genders_) != 1 || len(genders_[0]) != 2 {
-
-	}
 
 	genders_ := genderRe.FindSubmatch(contents)
 	if len(genders_) != 2 {
