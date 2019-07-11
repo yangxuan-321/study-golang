@@ -18,7 +18,12 @@ func ParseCity(contents []byte) engine.ParseResult {
 	for _, m := range all {
 		// 放入 用户的名字
 		result.Items = append(result.Items, "User: "+string(m[2]))
-		result.Requests = append(result.Requests, engine.Request{Url: string(m[1]), ParserFunc: engine.NilParser})
+		result.Requests = append(result.Requests,
+			engine.Request{
+				Url: string(m[1]),
+				ParserFunc: func(bytes []byte) engine.ParseResult {
+					return ParseProfile(bytes, string(m[2]))
+				}})
 	}
 
 	return result

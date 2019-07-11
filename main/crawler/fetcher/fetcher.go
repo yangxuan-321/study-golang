@@ -10,12 +10,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"study-golang/main/crawler/util/http"
 )
 
 // 主要负责 网络请求
 // 返回请求的内容(byte数组) 或者 相关错误
 func Fetch(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	//resp, err := http.Get(url)
+	resp, err := httputils.Get(url)
 	if nil != err {
 		return nil, err
 	}

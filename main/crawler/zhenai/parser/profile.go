@@ -46,11 +46,11 @@ const genderStringRegex = `"genderString":"([男女]士)"`
 
 var genderRe = regexp.MustCompile(genderStringRegex)
 
-const nickNameRegex = `<h1 class="nickName" data-v-5b109fc3="">([^<]*)</h1>`
+const nickNameRegex = `<h1 class="nickName"[^>]*>([^<]*)</h1>`
 
 var nickNameRe = regexp.MustCompile(nickNameRegex)
 
-func ParseProfile(contents []byte) engine.ParseResult {
+func ParseProfile(contents []byte, name string) engine.ParseResult {
 
 	profile := model.Profile{}
 
@@ -68,7 +68,7 @@ func ParseProfile(contents []byte) engine.ParseResult {
 		// TODO 错误处理
 	}
 
-	return engine.ParseResult{}
+	return engine.ParseResult{Items: []interface{}{profile}}
 }
 
 func parsePeopleBaseInfo(contents []byte, profile *model.Profile) error {
