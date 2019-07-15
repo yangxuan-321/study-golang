@@ -2,7 +2,7 @@ package engine
 
 type Request struct {
 	Url        string
-	ParserFunc func([]byte) ParseResult
+	ParserFunc func([]byte) (ParseResult, error)
 }
 
 type ParseResult struct {
@@ -13,6 +13,6 @@ type ParseResult struct {
 }
 
 // 什么都不做的 Parser
-func NilParser(contents []byte) ParseResult {
-	return ParseResult{}
+func NilParser(contents []byte) (ParseResult, error) {
+	return ParseResult{}, nil
 }

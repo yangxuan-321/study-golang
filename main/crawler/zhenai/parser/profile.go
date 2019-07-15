@@ -50,7 +50,7 @@ const nickNameRegex = `<h1 class="nickName"[^>]*>([^<]*)</h1>`
 
 var nickNameRe = regexp.MustCompile(nickNameRegex)
 
-func ParseProfile(contents []byte, name string) engine.ParseResult {
+func ParseProfile(contents []byte, name string) (engine.ParseResult, error) {
 
 	profile := model.Profile{}
 
@@ -66,9 +66,10 @@ func ParseProfile(contents []byte, name string) engine.ParseResult {
 	err := parsePeopleBaseInfo(contents, &profile)
 	if nil != err {
 		// TODO 错误处理
+		return engine.ParseResult{}, err
 	}
 
-	return engine.ParseResult{Items: []interface{}{profile}}
+	return engine.ParseResult{Items: []interface{}{profile}}, nil
 }
 
 func parsePeopleBaseInfo(contents []byte, profile *model.Profile) error {
