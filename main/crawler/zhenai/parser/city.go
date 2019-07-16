@@ -12,6 +12,10 @@ const cityUserRegex = `<a href="(http://album.zhenai.com/u/[0-9]+)" target="_bla
 
 var cityUserRe = regexp.MustCompile(cityUserRegex)
 
+const cityUrlRegex = `<a href="(http://www.zhenai.com/zhenghun/aba/[^"]+)">`
+
+var cityUrlRe = regexp.MustCompile(cityUrlRegex)
+
 func ParseCity(contents []byte) (engine.ParseResult, error) {
 	all := cityUserRe.FindAllSubmatch(contents, -1)
 	result := engine.ParseResult{}
@@ -26,5 +30,12 @@ func ParseCity(contents []byte) (engine.ParseResult, error) {
 				}})
 	}
 
+	cityUrls := cityUrlRe.FindAllSubmatch(contents, -1)
+	for _, m := range cityUrls {
+		result.Requests = append(result.Requests, engine.Request{
+			Url:        string(m[1]),
+			ParserFunc: ParseCity,
+		})
+	}
 	return result, nil
 }
