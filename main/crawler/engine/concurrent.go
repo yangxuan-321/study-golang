@@ -1,12 +1,12 @@
 package engine
 
-import "fmt"
-
 type ConcurrentEngine struct {
 	// 执行引擎
 	Scheduler Scheduler
 	// worker数量
 	WorkerCount int
+	// 用来存放需要存储的item
+	ItemChan chan interface{}
 }
 
 type Scheduler interface {
@@ -39,7 +39,10 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 		// 打印item
 		for _, item := range result.Items {
 			itemCount++
-			fmt.Printf("Got %d item: %v\n", itemCount, item)
+			//fmt.Printf("Got %d item: %v\n", itemCount, item)
+			go func() {
+				e.ItemChan <- item
+			}()
 		}
 		// 将request
 		for _, request := range result.Requests {
