@@ -1,5 +1,10 @@
 package engine
 
+import (
+	"fmt"
+	"study-golang/main/crawler/filter"
+)
+
 type ConcurrentEngine struct {
 	// 执行引擎
 	Scheduler Scheduler
@@ -46,9 +51,25 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 		}
 		// 将request
 		for _, request := range result.Requests {
+			// 去重操作
+			if isDuplicate(request.Url) {
+				continue
+			}
 			e.Scheduler.Submit(request)
 		}
 	}
+}
+
+// 使用 布隆过滤器 存在true
+var fl filter.BloomFilter = filter.NewMemoryBloomFilter(64<<20, 5)
+
+func isDuplicate(url string) bool {
+	if fl.HasString(url) {
+		// 存在
+		return true
+	}
+	// 不存在
+	return false
 }
 
 func createWorker(in chan Request, out chan ParseResult, ready ReadyNotifier) {
