@@ -17,7 +17,7 @@ import (
 // 主要负责 网络请求
 // 返回请求的内容(byte数组) 或者 相关错误
 // 防止 爬取过快 被封， 因此要限制速度
-var rateLimiter = time.Tick(100 * time.Millisecond)
+var rateLimiter = time.Tick(10 * time.Millisecond)
 
 func Fetch(url string) ([]byte, error) {
 	// 限速

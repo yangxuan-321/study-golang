@@ -20,7 +20,7 @@ func ParseCityList(contents []byte) (engine.ParseResult, error) {
 	// limit := 10
 	for _, a := range all {
 		// 放入 城市的名字
-		result.Items = append(result.Items, "City: "+string(a[2]))
+		//result.Items = append(result.Items, "City: "+string(a[2]))
 		result.Requests = append(result.Requests, engine.Request{Url: string(a[1]), ParserFunc: ParseCity})
 		// limit--
 		//if limit == 0 {

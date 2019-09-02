@@ -13,6 +13,11 @@ func ItemServer() chan interface{} {
 		for {
 			item := <-out
 			itemCount += 1
+
+			_, err := save(item)
+			if nil != err {
+				fmt.Printf("save error... + info: %v， %s \n", item, err)
+			}
 			fmt.Printf("Got item: %d th, info = %v", itemCount, item)
 		}
 	}()
